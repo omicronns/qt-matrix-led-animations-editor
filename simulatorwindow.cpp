@@ -7,6 +7,8 @@ SimulatorWindow::SimulatorWindow(QWidget *parent) :
     ui(new Ui::SimulatorWindow)
 {
     ui->setupUi(this);
+    ui->ledDisplay->createDiodes();
+    ui->ledDisplay->setGridSize(CELL_WIDTH, CELL_HEIGHT);
 }
 
 SimulatorWindow::~SimulatorWindow()

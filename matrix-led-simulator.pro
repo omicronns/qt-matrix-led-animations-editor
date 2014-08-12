@@ -12,11 +12,11 @@ TARGET = matrix-led-simulator
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        simulatorwindow.cpp \
-    ledmatrix.cpp
+SOURCES +=  main.cpp\
+            simulatorwindow.cpp \
+            ledmatrix.cpp
 
 HEADERS  += simulatorwindow.h \
-    ledmatrix.h
+            ledmatrix.h
 
 FORMS    += simulatorwindow.ui

@@ -2,6 +2,7 @@
 #define SIMULATORWINDOW_H
 
 #include <QWidget>
+#include "ledmatrix.h"
 
 namespace Ui {
 class SimulatorWindow;
