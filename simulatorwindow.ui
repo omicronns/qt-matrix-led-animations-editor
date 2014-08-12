@@ -24,16 +24,16 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTableView" name="tableView"/>
-    </item>
-    <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QPushButton" name="pushButton">
         <property name="text">
          <string>PushButton</string>
         </property>
        </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="LedMatrix" name="ledDisplay"/>
       </item>
      </layout>
     </item>
@@ -41,6 +41,13 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>LedMatrix</class>
+   <extends>QTableWidget</extends>
+   <header>ledmatrix.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

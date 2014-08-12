@@ -1,10 +1,12 @@
 #ifndef LEDMATRIX_H
 #define LEDMATRIX_H
 
-class LedMatrix
+#include <QTableWidget>
+
+class LedMatrix : public QTableWidget
 {
 public:
-    LedMatrix();
+    LedMatrix(QWidget *parent);
 };
 
 #endif // LEDMATRIX_H

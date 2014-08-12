@@ -1,5 +1,6 @@
 #include "ledmatrix.h"
 
-LedMatrix::LedMatrix()
+LedMatrix::LedMatrix(QWidget *parent)
+    :   QTableWidget(parent)
 {
 }
