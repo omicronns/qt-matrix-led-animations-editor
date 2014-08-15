@@ -1,17 +1,24 @@
 #include "ledmatrix.h"
 
 LedMatrix::LedMatrix(QWidget *parent)
-    :   QTableWidget(parent),
-        m_offColor(QColor(0,0,0)),
-        m_onColor(QColor(255,0,0))
+    :
+    QTableWidget(parent),
+    m_offColor(QColor(0,0,0)),
+    m_onColor(QColor(255,0,0))
 {
-    connect(this, SIGNAL(cellPressed(int,int)), this, SLOT(toggleDiode(int,int)));
+//    connect(this, SIGNAL(cellClicked(int,int)), this, SLOT(toggleDiode(int,int)));
+    connect(this, SIGNAL(cellEntered(int,int)), this, SLOT(toggleDiode(int,int)));
+    setFixedHeight(200);
+
+    SimFrame frm;
+//    frm()
 }
 
 LedMatrix::LedMatrix(int rows, int cols, QWidget *parent)
-   :    QTableWidget(rows, cols, parent),
-        m_offColor(QColor(0,0,0)),
-        m_onColor(QColor(255,0,0))
+   :
+   QTableWidget(rows, cols, parent),
+   m_offColor(QColor(0,0,0)),
+   m_onColor(QColor(255,0,0))
 {
     connect(this, SIGNAL(cellPressed(int,int)), this, SLOT(toggleDiode(int,int)));
 }
@@ -24,10 +31,10 @@ void LedMatrix::setGridSize(int width, int height)
         setColumnWidth(j, width);
 }
 
-void LedMatrix::createDiodes(void)
+void LedMatrix::createDiodes(int rows, int cols)
 {
-    setColumnCount(X_RESOLUTION);
-    setRowCount(Y_RESOLUTION);
+    setColumnCount(rows);
+    setRowCount(cols);
     for(int i = 0; i < rowCount(); i++)
         for(int j = 0; j < columnCount(); j++)
         {
@@ -47,4 +54,14 @@ void LedMatrix::toggleDiode(int row, int col)
         item(row, col)->setBackgroundColor(m_onColor);
     else
         item(row, col)->setBackgroundColor(m_offColor);
+}
+
+void LedMatrix::loadSimFrame(const SimFrame &v_frame)
+{
+
+}
+
+void LedMatrix::readSimFrame(SimFrame &v_frame)
+{
+
 }

@@ -17,7 +17,7 @@ public:
     ~SimulatorWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_debug1_clicked();
 
 private:
     Ui::SimulatorWindow *ui;

@@ -2,12 +2,13 @@
 #include "ui_simulatorwindow.h"
 #include <iostream>
 
-SimulatorWindow::SimulatorWindow(QWidget *parent) :
+SimulatorWindow::SimulatorWindow(QWidget *parent)
+    :
     QWidget(parent),
     ui(new Ui::SimulatorWindow)
 {
     ui->setupUi(this);
-    ui->ledDisplay->createDiodes();
+    ui->ledDisplay->createDiodes(8, 80);
     ui->ledDisplay->setGridSize(CELL_WIDTH, CELL_HEIGHT);
 }
 
@@ -16,7 +17,7 @@ SimulatorWindow::~SimulatorWindow()
     delete ui;
 }
 
-void SimulatorWindow::on_pushButton_clicked()
+void SimulatorWindow::on_debug1_clicked()
 {
-    std::cout << "Pressed\n";
+    std::cout << "Debug\n";
 }

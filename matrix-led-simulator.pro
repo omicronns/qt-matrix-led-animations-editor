@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES +=  main.cpp\
             simulatorwindow.cpp \
-            ledmatrix.cpp
+            ledmatrix.cpp \
+    frame.cpp \
+    simframe.cpp
 
 HEADERS  += simulatorwindow.h \
-            ledmatrix.h
+            ledmatrix.h \
+    frame.h \
+    simframe.h
 
 FORMS    += simulatorwindow.ui
