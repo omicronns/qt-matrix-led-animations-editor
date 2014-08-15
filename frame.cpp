@@ -1,27 +1,14 @@
 #include "frame.h"
 
-
 int Frame::xLen = FRAME_COLS/8;
 int Frame::yLen = FRAME_ROWS;
 
-
-
-uint8_t & Frame::operator()(int row, int col)
+void Frame::setByte(int v_row, int v_col, uint8_t v_data)
 {
-    return m_frameData[row][col];
+    m_frameData[v_row][v_col] = v_data;
 }
 
-Frame::Frame(const Frame &v_src)
+uint8_t Frame::getByte(int v_row, int v_col) const
 {
-    for(int row = 0; row < yLen; ++row)
-        for(int col = 0; col < xLen; ++col)
-            m_frameData[row][col] = v_src.m_frameData[row][col];
-}
-
-Frame & Frame::operator=(const Frame &v_src)
-{
-    for(int row = 0; row < yLen; ++row)
-        for(int col = 0; col < xLen; ++col)
-            m_frameData[row][col] = v_src.m_frameData[row][col];
-    return *this;
+    return m_frameData[v_row][v_col];
 }

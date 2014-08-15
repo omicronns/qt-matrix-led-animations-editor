@@ -1,40 +1,29 @@
 #include "ledmatrix.h"
 
-LedMatrix::LedMatrix(QWidget *parent)
+
+
+LedMatrix::LedMatrix(QWidget *v_parent)
     :
-    QTableWidget(parent),
+    QTableWidget(v_parent),
     m_offColor(QColor(0,0,0)),
     m_onColor(QColor(255,0,0))
 {
-//    connect(this, SIGNAL(cellClicked(int,int)), this, SLOT(toggleDiode(int,int)));
-    connect(this, SIGNAL(cellEntered(int,int)), this, SLOT(toggleDiode(int,int)));
+    connect(this, SIGNAL(cellEntered(int,int)), this, SLOT(toggleDiodeState(int,int)));
     setFixedHeight(200);
-
-    SimFrame frm;
-//    frm()
 }
 
-LedMatrix::LedMatrix(int rows, int cols, QWidget *parent)
-   :
-   QTableWidget(rows, cols, parent),
-   m_offColor(QColor(0,0,0)),
-   m_onColor(QColor(255,0,0))
-{
-    connect(this, SIGNAL(cellPressed(int,int)), this, SLOT(toggleDiode(int,int)));
-}
-
-void LedMatrix::setGridSize(int width, int height)
+void LedMatrix::setGridSize(int v_width, int v_height)
 {
     for(int i = 0; i < rowCount(); i++)
-        setRowHeight(i, height);
+        setRowHeight(i, v_height);
     for(int j = 0; j < columnCount(); j++)
-        setColumnWidth(j, width);
+        setColumnWidth(j, v_width);
 }
 
-void LedMatrix::createDiodes(int rows, int cols)
+void LedMatrix::createDiodes(int v_rows, int v_cols)
 {
-    setColumnCount(rows);
-    setRowCount(cols);
+    setRowCount(v_rows);
+    setColumnCount(v_cols);
     for(int i = 0; i < rowCount(); i++)
         for(int j = 0; j < columnCount(); j++)
         {
@@ -43,25 +32,41 @@ void LedMatrix::createDiodes(int rows, int cols)
         }
 }
 
-void LedMatrix::setDiode(int row, int col, bool state)
+void LedMatrix::setDiodeState(int v_row, int v_col, bool v_state)
 {
-    item(row, col)->setBackgroundColor(state ? m_onColor : m_offColor);
+    item(v_row, v_col)->setBackgroundColor(v_state ? m_onColor : m_offColor);
 }
 
-void LedMatrix::toggleDiode(int row, int col)
+bool LedMatrix::getDiodeState(int v_row, int v_col)
 {
-    if(item(row, col)->backgroundColor() == m_offColor)
-        item(row, col)->setBackgroundColor(m_onColor);
+    return item(v_row, v_col)->backgroundColor() == m_onColor;
+}
+
+void LedMatrix::toggleDiodeState(int v_row, int v_col)
+{
+    if(item(v_row, v_col)->backgroundColor() == m_offColor)
+        item(v_row, v_col)->setBackgroundColor(m_onColor);
     else
-        item(row, col)->setBackgroundColor(m_offColor);
+        item(v_row, v_col)->setBackgroundColor(m_offColor);
 }
 
-void LedMatrix::loadSimFrame(const SimFrame &v_frame)
+void LedMatrix::setSimFrame(const SimFrame &v_frame)
 {
-
+    for(int i = 0; i < rowCount(); i++)
+        for(int j = 0; j < columnCount(); j++)
+            setDiodeState(i,j,v_frame.getPixel(i,j));
 }
 
-void LedMatrix::readSimFrame(SimFrame &v_frame)
+void LedMatrix::getSimFrame(SimFrame &v_frame)
 {
+    for(int i = 0; i < rowCount(); i++)
+        for(int j = 0; j < columnCount(); j++)
+            v_frame.setPixel(i,j, getDiodeState(i,j));
+}
 
+void LedMatrix::clearDisplay()
+{
+    SimFrame clearFrame;
+    clearFrame.clearSimFrame();
+    setSimFrame(clearFrame);
 }

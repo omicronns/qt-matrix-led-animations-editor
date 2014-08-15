@@ -8,7 +8,7 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     ui(new Ui::SimulatorWindow)
 {
     ui->setupUi(this);
-    ui->ledDisplay->createDiodes(8, 80);
+    ui->ledDisplay->createDiodes(8,80);
     ui->ledDisplay->setGridSize(CELL_WIDTH, CELL_HEIGHT);
 }
 
@@ -17,7 +17,12 @@ SimulatorWindow::~SimulatorWindow()
     delete ui;
 }
 
-void SimulatorWindow::on_debug1_clicked()
+void SimulatorWindow::saveFrame()
 {
-    std::cout << "Debug\n";
+    ui->ledDisplay->getSimFrame(m_frame);
+}
+
+void SimulatorWindow::loadFrame()
+{
+    ui->ledDisplay->setSimFrame(m_frame);
 }

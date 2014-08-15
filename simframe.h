@@ -14,7 +14,7 @@ public:
     SimFrame & invert(void);
     SimFrame & clearSimFrame(void);
     void setPixel(int v_row, int v_col, bool v_val);
-    bool getPixel(int v_row, int v_col);
+    bool getPixel(int v_row, int v_col) const;
 };
 
 #endif // SIMFRAME_H

@@ -16,9 +16,8 @@ protected:
 
 public:
     Frame(void) {}
-    Frame(const Frame &v_src);
-    uint8_t & operator()(int row, int col);
-    Frame & operator=(const Frame &v_src);
+    void setByte(int v_row, int v_col, uint8_t v_data);
+    uint8_t getByte(int v_row, int v_col) const;
 };
 
 #endif // FRAME_H

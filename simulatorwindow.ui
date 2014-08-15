@@ -211,23 +211,23 @@
         </spacer>
        </item>
        <item alignment="Qt::AlignHCenter">
-        <widget class="QPushButton" name="debug1">
+        <widget class="QPushButton" name="clearButton">
          <property name="text">
-          <string>Debug1</string>
+          <string>Clear</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="debug2">
+        <widget class="QPushButton" name="saveButton">
          <property name="text">
-          <string>Debug2</string>
+          <string>Save</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="debug3">
+        <widget class="QPushButton" name="loadButton">
          <property name="text">
-          <string>Debug3</string>
+          <string>Load</string>
          </property>
         </widget>
        </item>
@@ -256,8 +256,64 @@
    <class>LedMatrix</class>
    <extends>QTableWidget</extends>
    <header>ledmatrix.h</header>
+   <slots>
+    <slot>clearDisplay()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>clearButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ledDisplay</receiver>
+   <slot>clearDisplay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>524</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>561</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>saveFrame()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>624</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>627</x>
+     <y>213</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>loadFrame()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>716</x>
+     <y>188</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>797</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>saveFrame()</slot>
+  <slot>loadFrame()</slot>
+ </slots>
 </ui>

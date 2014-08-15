@@ -12,12 +12,15 @@ class SimulatorWindow : public QWidget
 {
     Q_OBJECT
 
+    SimFrame m_frame;
+
 public:
     explicit SimulatorWindow(QWidget *parent = 0);
     ~SimulatorWindow();
 
 private slots:
-    void on_debug1_clicked();
+    void saveFrame(void);
+    void loadFrame(void);
 
 private:
     Ui::SimulatorWindow *ui;

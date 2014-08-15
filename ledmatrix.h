@@ -17,18 +17,21 @@ private:
     QColor m_onColor;
 
 public slots:
-    void setDiode(int row, int col, bool state);
-    void toggleDiode(int row, int col);
+    void setDiodeState(int v_row, int v_col, bool v_state);
+    void toggleDiodeState(int v_row, int v_col);
+    void clearDisplay(void);
 
 private:
-    void setGridSize(int width, int height);
-    void createDiodes(int rows, int cols);
+    void setGridSize(int v_width, int v_height);
+    void createDiodes(int v_rows, int v_cols);
 
 public:
-    LedMatrix(QWidget *parent);
-    LedMatrix(int rows, int cols, QWidget *parent);
-    void loadSimFrame(const SimFrame &v_frame);
-    void readSimFrame(SimFrame &v_frame);
+    LedMatrix(QWidget *v_parent);
+    LedMatrix(int rows, int cols, QWidget *v_parent);
+    bool diodeState(int v_row, int v_col);
+    bool getDiodeState(int v_row, int v_col);
+    void setSimFrame(const SimFrame &v_frame);
+    void getSimFrame(SimFrame &v_frame);
 };
 
 #endif // LEDMATRIX_H
