@@ -1,6 +1,11 @@
 #include "simframe.h"
 
 
+SimFrame::SimFrame()
+{
+    clearSimFrame();
+}
+
 SimFrame & SimFrame::operator=(const SimFrame &v_src)
 {
     for(int row = 0; row < yLen; ++row)

@@ -16,11 +16,13 @@ SOURCES +=  main.cpp\
             simulatorwindow.cpp \
             ledmatrix.cpp \
     frame.cpp \
-    simframe.cpp
+    simframe.cpp \
+    frameviewer.cpp
 
 HEADERS  += simulatorwindow.h \
             ledmatrix.h \
     frame.h \
-    simframe.h
+    simframe.h \
+    frameviewer.h
 
 FORMS    += simulatorwindow.ui

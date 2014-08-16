@@ -7,6 +7,7 @@
 class SimFrame : public Frame
 {
 public:
+    SimFrame(void);
     SimFrame & operator=(const SimFrame &v_src);
     SimFrame & operator|=(const SimFrame &v_src);
     SimFrame & operator&=(const SimFrame &v_src);

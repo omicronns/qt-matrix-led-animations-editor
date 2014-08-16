@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1224</width>
-    <height>217</height>
+    <height>251</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,176 +29,105 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTableWidget" name="frameViewer">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QGroupBox" name="selectorFrame">
+       <property name="title">
+        <string>Frame Selector</string>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>71</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>71</height>
-        </size>
-       </property>
-       <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOn</enum>
-       </property>
-       <property name="rowCount">
-        <number>1</number>
-       </property>
-       <property name="columnCount">
-        <number>101</number>
-       </property>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <row/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
-       <column/>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="FrameViewer" name="frameViewer">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>71</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>71</height>
+           </size>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="rowCount">
+           <number>1</number>
+          </property>
+          <property name="columnCount">
+           <number>0</number>
+          </property>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <row/>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
-      <widget class="LedMatrix" name="ledDisplay">
-       <property name="enabled">
+      <widget class="QGroupBox" name="editorFrame">
+       <property name="autoFillBackground">
         <bool>true</bool>
        </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::NoSelection</enum>
+       <property name="title">
+        <string>Frame Editor</string>
        </property>
-       <property name="wordWrap">
-        <bool>false</bool>
-       </property>
-       <property name="cornerButtonEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="rowCount">
-        <number>0</number>
-       </property>
-       <property name="columnCount">
-        <number>0</number>
-       </property>
-       <attribute name="horizontalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="LedMatrix" name="ledDisplay">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::NoSelection</enum>
+          </property>
+          <property name="wordWrap">
+           <bool>false</bool>
+          </property>
+          <property name="cornerButtonEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="rowCount">
+           <number>0</number>
+          </property>
+          <property name="columnCount">
+           <number>0</number>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <spacer name="horizontalSpacer">
+        <spacer name="buttonSpacerLeft">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -213,26 +142,26 @@
        <item alignment="Qt::AlignHCenter">
         <widget class="QPushButton" name="clearButton">
          <property name="text">
-          <string>Clear</string>
+          <string>Clear frame</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="saveButton">
          <property name="text">
-          <string>Save</string>
+          <string>Store frame</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="loadButton">
          <property name="text">
-          <string>Load</string>
+          <string>Add frame</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_2">
+        <spacer name="buttonSpacerRight">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -260,22 +189,27 @@
     <slot>clearDisplay()</slot>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>FrameViewer</class>
+   <extends>QTableWidget</extends>
+   <header>frameviewer.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
   <connection>
-   <sender>clearButton</sender>
+   <sender>loadButton</sender>
    <signal>clicked()</signal>
-   <receiver>ledDisplay</receiver>
-   <slot>clearDisplay()</slot>
+   <receiver>SimulatorWindow</receiver>
+   <slot>addFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>524</x>
-     <y>195</y>
+     <x>753</x>
+     <y>239</y>
     </hint>
     <hint type="destinationlabel">
-     <x>561</x>
-     <y>155</y>
+     <x>775</x>
+     <y>225</y>
     </hint>
    </hints>
   </connection>
@@ -283,37 +217,70 @@
    <sender>saveButton</sender>
    <signal>clicked()</signal>
    <receiver>SimulatorWindow</receiver>
-   <slot>saveFrame()</slot>
+   <slot>storeFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>624</x>
-     <y>198</y>
+     <x>662</x>
+     <y>239</y>
     </hint>
     <hint type="destinationlabel">
-     <x>627</x>
-     <y>213</y>
+     <x>622</x>
+     <y>227</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>loadButton</sender>
-   <signal>clicked()</signal>
+   <sender>frameViewer</sender>
+   <signal>cellEntered(int,int)</signal>
    <receiver>SimulatorWindow</receiver>
-   <slot>loadFrame()</slot>
+   <slot>switchFrame(int,int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>716</x>
-     <y>188</y>
+     <x>109</x>
+     <y>45</y>
     </hint>
     <hint type="destinationlabel">
-     <x>797</x>
-     <y>210</y>
+     <x>117</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameViewer</sender>
+   <signal>cellClicked(int,int)</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>switchFrame(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>312</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ledDisplay</receiver>
+   <slot>clearDisplay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>563</x>
+     <y>239</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>514</x>
+     <y>134</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>saveFrame()</slot>
-  <slot>loadFrame()</slot>
+  <slot>addFrame()</slot>
+  <slot>switchFrame(int,int)</slot>
+  <slot>storeFrame()</slot>
  </slots>
 </ui>

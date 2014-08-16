@@ -8,8 +8,7 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     ui(new Ui::SimulatorWindow)
 {
     ui->setupUi(this);
-    ui->ledDisplay->createDiodes(8,80);
-    ui->ledDisplay->setGridSize(CELL_WIDTH, CELL_HEIGHT);
+    ui->ledDisplay->init();
 }
 
 SimulatorWindow::~SimulatorWindow()
@@ -17,12 +16,52 @@ SimulatorWindow::~SimulatorWindow()
     delete ui;
 }
 
-void SimulatorWindow::saveFrame()
+void SimulatorWindow::addFrame(void)
 {
-    ui->ledDisplay->getSimFrame(m_frame);
+    if(ui->frameViewer->columnCount() == 0)
+    {
+        m_animation.append(SimFrame());
+        ui->frameViewer->setColumnCount(1);
+        m_currentFrame = 0;
+    }
+    else
+    {
+        m_animation.insert(++m_currentFrame, SimFrame());
+        ui->frameViewer->setColumnCount(ui->frameViewer->columnCount() + 1);
+    }
+
 }
 
-void SimulatorWindow::loadFrame()
+void SimulatorWindow::saveFrame(int v_frameNumber)
 {
-    ui->ledDisplay->setSimFrame(m_frame);
+    ui->ledDisplay->getSimFrame(m_animation[v_frameNumber]);
+}
+
+void SimulatorWindow::loadFrame(int v_frameNumber)
+{
+    ui->ledDisplay->setSimFrame(m_animation[v_frameNumber]);
+}
+
+void SimulatorWindow::switchFrame(int dummy, int v_frameNumber)
+{
+    m_currentFrame = v_frameNumber;
+    loadFrame(v_frameNumber);
+}
+
+void SimulatorWindow::storeFrame(void)
+{
+    if(ui->frameViewer->columnCount())
+    {
+        QModelIndexList selectedFrames = ui->frameViewer->selectedIndexesList();
+        while(selectedFrames.size())
+        {
+            saveFrame(selectedFrames.front().column());
+            selectedFrames.removeFirst();
+        }
+    }
+    else
+    {
+        QMessageBox msg(QMessageBox::Warning, QString("Warning"), QString("No frames avalible"), QMessageBox::Ok);
+        msg.exec();
+    }
 }
