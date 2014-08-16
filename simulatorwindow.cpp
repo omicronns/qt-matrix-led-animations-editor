@@ -9,6 +9,11 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->ledDisplay->init();
+    ui->advancedStoreButton->setMenu(new QMenu(ui->advancedStoreButton));
+    connect(ui->advancedStoreButton->menu()->addAction(QString("Add pixel mask to frame")),
+            SIGNAL(triggered()), this, SLOT(sumToFrame()));
+    connect(ui->advancedStoreButton->menu()->addAction(QString("Overlapping pixel mask to frame")),
+            SIGNAL(triggered()), this, SLOT(overlapToFrame()));
 }
 
 SimulatorWindow::~SimulatorWindow()
@@ -55,7 +60,47 @@ void SimulatorWindow::storeFrame(void)
         QModelIndexList selectedFrames = ui->frameViewer->selectedIndexesList();
         while(selectedFrames.size())
         {
-            saveFrame(selectedFrames.front().column());
+            ui->ledDisplay->getSimFrame(m_animation[selectedFrames.front().column()]);
+            selectedFrames.removeFirst();
+        }
+    }
+    else
+    {
+        QMessageBox msg(QMessageBox::Warning, QString("Warning"), QString("No frames avalible"), QMessageBox::Ok);
+        msg.exec();
+    }
+}
+
+void SimulatorWindow::sumToFrame(void)
+{
+    if(ui->frameViewer->columnCount())
+    {
+        QModelIndexList selectedFrames = ui->frameViewer->selectedIndexesList();
+        while(selectedFrames.size())
+        {
+            SimFrame toAdd;
+            ui->ledDisplay->getSimFrame(toAdd);
+            m_animation[selectedFrames.front().column()] |= toAdd;
+            selectedFrames.removeFirst();
+        }
+    }
+    else
+    {
+        QMessageBox msg(QMessageBox::Warning, QString("Warning"), QString("No frames avalible"), QMessageBox::Ok);
+        msg.exec();
+    }
+}
+
+void SimulatorWindow::overlapToFrame(void)
+{
+    if(ui->frameViewer->columnCount())
+    {
+        QModelIndexList selectedFrames = ui->frameViewer->selectedIndexesList();
+        while(selectedFrames.size())
+        {
+            SimFrame toAdd;
+            ui->ledDisplay->getSimFrame(toAdd);
+            m_animation[selectedFrames.front().column()] &= toAdd;
             selectedFrames.removeFirst();
         }
     }

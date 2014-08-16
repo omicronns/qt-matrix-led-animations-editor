@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMessageBox>
+#include <QMenu>
 #include <QList>
 #include "ledmatrix.h"
 
@@ -25,6 +26,8 @@ private slots:
     void addFrame(void);
     void switchFrame(int dummy, int v_frameNumber);
     void storeFrame(void);
+    void sumToFrame(void);
+    void overlapToFrame(void);
 
 private:
     void saveFrame(int v_frameNumber);
