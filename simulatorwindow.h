@@ -9,7 +9,12 @@
 #include <QList>
 #include <QModelIndexList>
 #include <QString>
+#include <QTimer>
+#include <QAction>
 #include "ledmatrix.h"
+
+#define FRAMES_PER_SECOND 20
+#define FRAME_TIMER_INTERVAL 1000/FRAMES_PER_SECOND
 
 namespace Ui {
 class SimulatorWindow;
@@ -22,6 +27,9 @@ class SimulatorWindow : public QWidget
     QString m_exportFilename;
     QString m_importFilename;
     QList<SimFrame> m_animation;
+    QList<SimFrame> m_clipboard;
+    QTimer m_updateFrameTimer;
+    int m_currentPlayingFrame;
 
 public:
     explicit SimulatorWindow(QWidget *parent = 0);
@@ -29,12 +37,14 @@ public:
 
 private slots:
     void removeFrame(void);
-    void insertFrame(void);
+    void insertFrameAppend(void);
+    void insertFramePrepend(void);
     void switchFrame(int dummy, int v_frameNumber);
     void loadFrameToEditor(void);
     void storeFrame(void);
     void orWithFrame(void);
     void andWithFrame(void);
+    void mergeFrames(void);
     void rotateFrameLeft(void);
     void rotateFrameRight(void);
     void rotateFrameUp(void);
@@ -45,6 +55,12 @@ private slots:
     void exportFrame(void);
     void quickStore(void);
     void quickLoad(void);
+    void copyToClipboard(void);
+    void cutToClipboard(void);
+    void pasteToAnimationAppend(void);
+    void pasteToAnimationPrepend(void);
+    void loadNextFrame(void);
+    void playPause(void);
 
 private:
     void writeFrameToFile(const SimFrame v_frame, QFile &v_outFile);

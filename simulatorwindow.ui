@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1224</width>
-    <height>512</height>
+    <height>545</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -215,7 +215,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
-           <widget class="QPushButton" name="insertFrameButton">
+           <widget class="QPushButton" name="playButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -223,7 +223,23 @@
              </sizepolicy>
             </property>
             <property name="text">
+             <string>Play/Pause</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="insertFrameButton">
+            <property name="text">
              <string>Insert frame</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::DownArrow</enum>
             </property>
            </widget>
           </item>
@@ -388,28 +404,12 @@
    <slot>clearDisplay()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>782</x>
+     <x>638</x>
      <y>456</y>
     </hint>
     <hint type="destinationlabel">
      <x>719</x>
      <y>283</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>insertFrameButton</sender>
-   <signal>clicked()</signal>
-   <receiver>SimulatorWindow</receiver>
-   <slot>insertFrame()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>637</x>
-     <y>423</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>437</x>
-     <y>314</y>
     </hint>
    </hints>
   </connection>
@@ -452,7 +452,7 @@
    <slot>storeFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>652</x>
+     <x>508</x>
      <y>489</y>
     </hint>
     <hint type="destinationlabel">
@@ -468,7 +468,7 @@
    <slot>loadFrameToEditor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>779</x>
+     <x>635</x>
      <y>423</y>
     </hint>
     <hint type="destinationlabel">
@@ -484,8 +484,8 @@
    <slot>removeFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>653</x>
-     <y>456</y>
+     <x>509</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
      <x>822</x>
@@ -500,7 +500,7 @@
    <slot>exportAnimation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>455</x>
+     <x>357</x>
      <y>464</y>
     </hint>
     <hint type="destinationlabel">
@@ -516,7 +516,7 @@
    <slot>importAnimation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>435</x>
+     <x>337</x>
      <y>423</y>
     </hint>
     <hint type="destinationlabel">
@@ -534,5 +534,6 @@
   <slot>exportAnimation()</slot>
   <slot>importAnimation()</slot>
   <slot>removeFrame()</slot>
+  <slot>debug()</slot>
  </slots>
 </ui>

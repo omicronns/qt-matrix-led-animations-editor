@@ -6,6 +6,8 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     QWidget(parent),
     m_exportFilename(""),
     m_importFilename(""),
+    m_updateFrameTimer(this),
+    m_currentPlayingFrame(0),
     ui(new Ui::SimulatorWindow)
 {
     ui->setupUi(this);
@@ -14,6 +16,9 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     ui->quickPreviewWidget->init((CELL_WIDTH*9)/15, (CELL_HEIGHT*9)/15,
                                  (CELL_WIDTH*FRAME_COLS*9)/15 + 2,
                                  (CELL_HEIGHT*FRAME_ROWS*9)/15 + 2);
+    m_updateFrameTimer.setInterval(FRAME_TIMER_INTERVAL);
+    connect(&m_updateFrameTimer, SIGNAL(timeout()), this, SLOT(loadNextFrame()));
+    connect(ui->playButton, SIGNAL(clicked()), this, SLOT(playPause()));
 
     ui->storeFrameButton->setMenu(new QMenu(ui->storeFrameButton));
     connect(ui->storeFrameButton->menu()->addAction(QString("OR and store")),
@@ -21,7 +26,19 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     connect(ui->storeFrameButton->menu()->addAction(QString("AND and store")),
             SIGNAL(triggered()), this, SLOT(andWithFrame()));
 
+
+    ui->insertFrameButton->setMenu(new QMenu(ui->insertFrameButton));
+    connect(ui->insertFrameButton->menu()->addAction(QString("Append")),
+            SIGNAL(triggered()), this, SLOT(insertFrameAppend()));
+    ui->insertFrameButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_A);
+    connect(ui->insertFrameButton->menu()->addAction(QString("Prepend")),
+            SIGNAL(triggered()), this, SLOT(insertFramePrepend()));
+    ui->insertFrameButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Z);
+
     ui->featuresButton->setMenu(new QMenu(ui->featuresButton));
+    connect(ui->featuresButton->menu()->addAction(QString("Merge frames")),
+            SIGNAL(triggered()), this, SLOT(mergeFrames()));
+    ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_Z);
     connect(ui->featuresButton->menu()->addAction(QString("Rotate left")),
             SIGNAL(triggered()), this, SLOT(rotateFrameLeft()));
     ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_A);
@@ -36,10 +53,10 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_W);
     connect(ui->featuresButton->menu()->addAction(QString("Quick store")),
             SIGNAL(triggered()), this, SLOT(quickStore()));
-    ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_Z);
+    ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_D);
     connect(ui->featuresButton->menu()->addAction(QString("Quick load")),
             SIGNAL(triggered()), this, SLOT(quickLoad()));
-    ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_X);
+    ui->featuresButton->menu()->actions().back()->setShortcut(Qt::CTRL + Qt::Key_F);
 
     ui->importButton->setMenu(new QMenu(ui->importButton));
     connect(ui->importButton->menu()->addAction(QString("Import frame")),
@@ -48,6 +65,22 @@ SimulatorWindow::SimulatorWindow(QWidget *parent)
     ui->exportButton->setMenu(new QMenu(ui->exportButton));
     connect(ui->exportButton->menu()->addAction(QString("Export frame")),
             SIGNAL(triggered()), this, SLOT(exportFrame()));
+
+    addAction(new QAction(this));
+    actions().back()->setShortcut(Qt::CTRL + Qt::Key_C);
+    connect(actions().back(), SIGNAL(triggered()), this, SLOT(copyToClipboard()));
+
+    addAction(new QAction(this));
+    actions().back()->setShortcut(Qt::CTRL + Qt::Key_X);
+    connect(actions().back(), SIGNAL(triggered()), this, SLOT(cutToClipboard()));
+
+    addAction(new QAction(this));
+    actions().back()->setShortcut(Qt::CTRL + Qt::Key_V);
+    connect(actions().back(), SIGNAL(triggered()), this, SLOT(pasteToAnimationAppend()));
+
+    addAction(new QAction(this));
+    actions().back()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_V);
+    connect(actions().back(), SIGNAL(triggered()), this, SLOT(pasteToAnimationPrepend()));
 }
 
 SimulatorWindow::~SimulatorWindow()
@@ -57,15 +90,15 @@ SimulatorWindow::~SimulatorWindow()
 
 void SimulatorWindow::removeFrame(void)
 {
-    if(ui->frameSelector->columnCount())
+    if(m_animation.size())
     {
         QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
         while(selectedFrames.size())
         {
-            m_animation.removeAt(selectedFrames.front().column());
-            ui->frameSelector->setColumnCount(ui->frameSelector->columnCount() - 1);
-            selectedFrames.removeFirst();
+            m_animation.removeAt(selectedFrames.back().column());
+            selectedFrames.removeLast();
         }
+        ui->frameSelector->setColumnCount(m_animation.size());
     }
     else
     {
@@ -74,32 +107,30 @@ void SimulatorWindow::removeFrame(void)
     }
 }
 
-void SimulatorWindow::insertFrame(void)
+void SimulatorWindow::insertFrameAppend(void)
 {
-    if(ui->frameSelector->columnCount() == 0)
-    {
-        m_animation.append(SimFrame());
-        ui->frameSelector->setColumnCount(1);
-    }
+    QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+    if(selectedFrames.size())
+        m_animation.insert(selectedFrames.back().column() + 1, SimFrame());
     else
-    {
-        QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
-        if(selectedFrames.size())
-        {
-            m_animation.insert(selectedFrames.front().column() + 1, SimFrame());
-            ui->frameSelector->setColumnCount(ui->frameSelector->columnCount() + 1);
-        }
-        else
-        {
-            m_animation.append(SimFrame());
-            ui->frameSelector->setColumnCount(ui->frameSelector->columnCount() + 1);
-        }
-    }
+        m_animation.append(SimFrame());
+    ui->frameSelector->setColumnCount(m_animation.size());
+}
+
+void SimulatorWindow::insertFramePrepend()
+{
+    QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+    if(selectedFrames.size())
+        m_animation.insert(selectedFrames.front().column(), SimFrame());
+    else
+        m_animation.prepend(SimFrame());
+    ui->frameSelector->setColumnCount(m_animation.size());
 }
 
 void SimulatorWindow::switchFrame(int dummy, int v_frameNumber)
 {
     ui->framePreview->setSimFrame(m_animation[v_frameNumber]);
+    m_currentPlayingFrame = v_frameNumber;
 }
 
 void SimulatorWindow::loadFrameToEditor(void)
@@ -111,7 +142,7 @@ void SimulatorWindow::loadFrameToEditor(void)
 
 void SimulatorWindow::storeFrame(void)
 {
-    if(ui->frameSelector->columnCount())
+    if(m_animation.size())
     {
         QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
         if(selectedFrames.size())
@@ -121,8 +152,8 @@ void SimulatorWindow::storeFrame(void)
             ui->framePreview->setSimFrame(editedFrame);
             while(selectedFrames.size())
             {
-                ui->frameEditor->getSimFrame(m_animation[selectedFrames.front().column()]);
-                selectedFrames.removeFirst();
+                m_animation[selectedFrames.back().column()] = editedFrame;
+                selectedFrames.removeLast();
             }
         }
         else
@@ -140,7 +171,7 @@ void SimulatorWindow::storeFrame(void)
 
 void SimulatorWindow::orWithFrame(void)
 {
-    if(ui->frameSelector->columnCount())
+    if(m_animation.size())
     {
         QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
         if(selectedFrames.size())
@@ -154,8 +185,8 @@ void SimulatorWindow::orWithFrame(void)
             ui->frameEditor->getSimFrame(toOr);
             while(selectedFrames.size())
             {
-                m_animation[selectedFrames.front().column()] |= toOr;
-                selectedFrames.removeFirst();
+                m_animation[selectedFrames.back().column()] |= toOr;
+                selectedFrames.removeLast();
             }
         }
         else
@@ -173,7 +204,7 @@ void SimulatorWindow::orWithFrame(void)
 
 void SimulatorWindow::andWithFrame(void)
 {
-    if(ui->frameSelector->columnCount())
+    if(m_animation.size())
     {
         QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
         if(selectedFrames.size())
@@ -187,8 +218,8 @@ void SimulatorWindow::andWithFrame(void)
             ui->frameEditor->getSimFrame(toAnd);
             while(selectedFrames.size())
             {
-                m_animation[selectedFrames.front().column()] &= toAnd;
-                selectedFrames.removeFirst();
+                m_animation[selectedFrames.back().column()] &= toAnd;
+                selectedFrames.removeLast();
             }
         }
         else
@@ -200,6 +231,27 @@ void SimulatorWindow::andWithFrame(void)
     else
     {
         QMessageBox msg(QMessageBox::Warning, QString("Warning"), QString("No frames avalible"), QMessageBox::Ok);
+        msg.exec();
+    }
+}
+
+void SimulatorWindow::mergeFrames(void)
+{
+    QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+    if(selectedFrames.size())
+    {
+        SimFrame mergedFrame;
+        ui->frameEditor->getSimFrame(mergedFrame);
+        while(selectedFrames.size())
+        {
+            mergedFrame |= m_animation[selectedFrames.back().column()];
+            selectedFrames.removeLast();
+        }
+        ui->frameEditor->setSimFrame(mergedFrame);
+    }
+    else
+    {
+        QMessageBox msg(QMessageBox::Warning, QString("Warning"), QString("Select frames to merge"), QMessageBox::Ok);
         msg.exec();
     }
 }
@@ -244,24 +296,6 @@ void SimulatorWindow::rotateFrameDown(void)
     ui->frameEditor->setSimFrame(rotatedFrame);
 }
 
-void SimulatorWindow::writeFrameToFile(const SimFrame v_frame, QFile &v_outFile)
-{
-    for(int row = 0; row < v_frame.rows(); ++row)
-        for(int col = 0; col < v_frame.cols()/8; ++col)
-            v_outFile.putChar(v_frame.getByte(row, col));
-}
-
-void SimulatorWindow::readFrameFromFile(SimFrame &v_frame, QFile &v_inFile)
-{
-    char byte;
-    for(int row = 0; row < v_frame.rows(); ++row)
-        for(int col = 0; col < v_frame.cols()/8; ++col)
-        {
-            v_inFile.getChar(&byte);
-            v_frame.setByte(row, col, byte);
-        }
-}
-
 void SimulatorWindow::importAnimation(void)
 {
     m_importFilename = QFileDialog::getOpenFileName(this, "Open File",
@@ -273,7 +307,6 @@ void SimulatorWindow::importAnimation(void)
         inFile.open(QIODevice::ReadOnly);
         int size;
         inFile.read((char *)(&size), 4);
-        ui->frameSelector->setColumnCount(size);
         for(int i = 0; i < size; ++i)
         {
             SimFrame frame;
@@ -281,6 +314,7 @@ void SimulatorWindow::importAnimation(void)
             m_animation.append(frame);
         }
         ui->framePreview->setSimFrame(m_animation.front());
+        ui->frameSelector->setColumnCount(m_animation.size());
         inFile.close();
     }
 }
@@ -316,8 +350,8 @@ void SimulatorWindow::importFrame(void)
             readFrameFromFile(inFrame, inFile);
             while(selectedFrames.size())
             {
-                m_animation[selectedFrames.front().column()] = inFrame;
-                selectedFrames.removeFirst();
+                m_animation[selectedFrames.back().column()] = inFrame;
+                selectedFrames.removeLast();
             }
             ui->framePreview->setSimFrame(inFrame);
         }
@@ -358,4 +392,140 @@ void SimulatorWindow::quickLoad(void)
     ui->quickPreviewWidget->getSimFrame(frameToLoad);
     ui->frameEditor->setSimFrame(frameToLoad);
 }
+
+void SimulatorWindow::copyToClipboard(void)
+{
+    QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+    if(selectedFrames.size())
+    {
+        m_clipboard.clear();
+        while(selectedFrames.size())
+        {
+            m_clipboard.prepend(m_animation[selectedFrames.back().column()]);
+            selectedFrames.removeLast();
+        }
+    }
+}
+
+void SimulatorWindow::cutToClipboard()
+{
+    QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+    if(selectedFrames.size())
+    {
+        m_clipboard.clear();
+        while(selectedFrames.size())
+        {
+            m_clipboard.prepend(m_animation[selectedFrames.back().column()]);
+            m_animation.removeAt(selectedFrames.back().column());
+            selectedFrames.removeLast();
+        }
+        ui->frameSelector->setColumnCount(m_animation.size());
+    }
+}
+
+void SimulatorWindow::pasteToAnimationAppend(void)
+{
+    if(m_clipboard.size())
+    {
+        if(m_animation.size())
+        {
+            QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+            if(selectedFrames.size() == 1)
+            {
+                QList<SimFrame> clipboardCopy = m_clipboard;
+                while(clipboardCopy.size())
+                {
+                    m_animation.insert(selectedFrames.back().column() + 1, clipboardCopy.back());
+                    clipboardCopy.removeLast();
+                }
+                ui->frameSelector->setColumnCount(m_animation.size());
+            }
+            else
+            {
+                QMessageBox msg(QMessageBox::Warning, QString("Warning"),
+                                QString("Select one frame, to paste clipboard after"),
+                                QMessageBox::Ok);
+                msg.exec();
+            }
+        }
+        else
+        {
+            m_animation = m_clipboard;
+            ui->frameSelector->setColumnCount(m_animation.size());
+        }
+    }
+}
+
+void SimulatorWindow::pasteToAnimationPrepend(void)
+{
+    if(m_clipboard.size())
+    {
+        if(m_animation.size())
+        {
+            QModelIndexList selectedFrames = ui->frameSelector->selectedIndexesList();
+            if(selectedFrames.size() == 1)
+            {
+                QList<SimFrame> clipboardCopy = m_clipboard;
+                while(clipboardCopy.size())
+                {
+                    m_animation.insert(selectedFrames.back().column(), clipboardCopy.back());
+                    clipboardCopy.removeLast();
+                }
+                ui->frameSelector->setColumnCount(m_animation.size());
+            }
+            else
+            {
+                QMessageBox msg(QMessageBox::Warning, QString("Warning"),
+                                QString("Select one frame, to paste clipboard after"),
+                                QMessageBox::Ok);
+                msg.exec();
+            }
+        }
+        else
+        {
+            m_animation = m_clipboard;
+            ui->frameSelector->setColumnCount(m_animation.size());
+        }
+    }
+}
+
+void SimulatorWindow::loadNextFrame(void)
+{
+    if(m_animation.size())
+    {
+        if(m_currentPlayingFrame >= m_animation.size())
+            m_currentPlayingFrame = 0;
+        ui->framePreview->setSimFrame(m_animation[m_currentPlayingFrame]);
+        m_currentPlayingFrame = (m_currentPlayingFrame + 1) % m_animation.size();
+    }
+    else
+        m_updateFrameTimer.stop();
+}
+
+void SimulatorWindow::playPause(void)
+{
+    if(m_updateFrameTimer.isActive())
+        m_updateFrameTimer.stop();
+    else
+        m_updateFrameTimer.start();
+}
+
+void SimulatorWindow::writeFrameToFile(const SimFrame v_frame, QFile &v_outFile)
+{
+    for(int row = 0; row < v_frame.rows(); ++row)
+        for(int col = 0; col < v_frame.cols()/8; ++col)
+            v_outFile.putChar(v_frame.getByte(row, col));
+}
+
+void SimulatorWindow::readFrameFromFile(SimFrame &v_frame, QFile &v_inFile)
+{
+    char byte;
+    for(int row = 0; row < v_frame.rows(); ++row)
+        for(int col = 0; col < v_frame.cols()/8; ++col)
+        {
+            v_inFile.getChar(&byte);
+            v_frame.setByte(row, col, byte);
+        }
+}
+
 
