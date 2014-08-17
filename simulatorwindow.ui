@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1224</width>
-    <height>400</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SimulatorWindow</string>
+   <string>Animation Editor</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -35,7 +35,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="FrameViewer" name="frameViewer">
+         <widget class="FrameViewer" name="frameSelector">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -60,6 +60,9 @@
           <property name="horizontalScrollBarPolicy">
            <enum>Qt::ScrollBarAlwaysOn</enum>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
           <property name="rowCount">
            <number>1</number>
           </property>
@@ -76,6 +79,31 @@
       </widget>
      </item>
      <item>
+      <widget class="QGroupBox" name="previewFrame">
+       <property name="title">
+        <string>Frame Preview</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="LedMatrix" name="framePreview">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="copyLayout"/>
+     </item>
+     <item>
       <widget class="QGroupBox" name="editorFrame">
        <property name="autoFillBackground">
         <bool>true</bool>
@@ -85,7 +113,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="LedMatrix" name="ledDisplay">
+         <widget class="LedMatrix" name="frameEditor">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -139,49 +167,181 @@
          </property>
         </spacer>
        </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QPushButton" name="clearButton">
-         <property name="text">
-          <string>Clear frame</string>
+       <item>
+        <widget class="QGroupBox" name="importExportOptions">
+         <property name="title">
+          <string>Import/Export</string>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QToolButton" name="importButton">
+            <property name="text">
+             <string>Import</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::MenuButtonPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::DownArrow</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="exportButton">
+            <property name="text">
+             <string>Export</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::MenuButtonPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::DownArrow</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="advancedStoreButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+        <widget class="QGroupBox" name="animationOptions">
+         <property name="title">
+          <string>Animation options</string>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Store frame</string>
-         </property>
-         <property name="popupMode">
-          <enum>QToolButton::MenuButtonPopup</enum>
-         </property>
-         <property name="toolButtonStyle">
-          <enum>Qt::ToolButtonTextOnly</enum>
-         </property>
-         <property name="autoRaise">
-          <bool>false</bool>
-         </property>
-         <property name="arrowType">
-          <enum>Qt::DownArrow</enum>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QPushButton" name="insertFrameButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Insert frame</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="removeFrameButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Remove frame</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="storeFrameButton">
+            <property name="text">
+             <string>Store frame</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::MenuButtonPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::DownArrow</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="loadButton">
-         <property name="text">
-          <string>Add frame</string>
+        <widget class="QGroupBox" name="frameEditOptions">
+         <property name="autoFillBackground">
+          <bool>true</bool>
          </property>
+         <property name="title">
+          <string>Frame edit options</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Load frame</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clearButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Clear frame</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="featuresButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Features</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::DownArrow</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="quickPreview">
+         <property name="title">
+          <string>Frame quick memory preview</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="LedMatrix" name="quickPreviewWidget">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <attribute name="horizontalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -222,39 +382,39 @@
  <resources/>
  <connections>
   <connection>
-   <sender>loadButton</sender>
+   <sender>clearButton</sender>
+   <signal>clicked()</signal>
+   <receiver>frameEditor</receiver>
+   <slot>clearDisplay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>782</x>
+     <y>456</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>719</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertFrameButton</sender>
    <signal>clicked()</signal>
    <receiver>SimulatorWindow</receiver>
-   <slot>addFrame()</slot>
+   <slot>insertFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>762</x>
-     <y>362</y>
+     <x>637</x>
+     <y>423</y>
     </hint>
     <hint type="destinationlabel">
-     <x>813</x>
-     <y>356</y>
+     <x>437</x>
+     <y>314</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>frameViewer</sender>
-   <signal>cellEntered(int,int)</signal>
-   <receiver>SimulatorWindow</receiver>
-   <slot>switchFrame(int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>109</x>
-     <y>45</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>103</x>
-     <y>355</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>frameViewer</sender>
+   <sender>frameSelector</sender>
    <signal>cellClicked(int,int)</signal>
    <receiver>SimulatorWindow</receiver>
    <slot>switchFrame(int,int)</slot>
@@ -270,41 +430,109 @@
    </hints>
   </connection>
   <connection>
-   <sender>clearButton</sender>
-   <signal>clicked()</signal>
-   <receiver>ledDisplay</receiver>
-   <slot>clearDisplay()</slot>
+   <sender>frameSelector</sender>
+   <signal>cellEntered(int,int)</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>switchFrame(int,int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>554</x>
-     <y>362</y>
+     <x>109</x>
+     <y>45</y>
     </hint>
     <hint type="destinationlabel">
-     <x>554</x>
-     <y>339</y>
+     <x>103</x>
+     <y>355</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>advancedStoreButton</sender>
+   <sender>storeFrameButton</sender>
    <signal>clicked()</signal>
    <receiver>SimulatorWindow</receiver>
    <slot>storeFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>671</x>
-     <y>362</y>
+     <x>652</x>
+     <y>489</y>
     </hint>
     <hint type="destinationlabel">
-     <x>421</x>
-     <y>355</y>
+     <x>433</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>loadFrameToEditor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>779</x>
+     <y>423</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>784</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeFrameButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>removeFrame()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>653</x>
+     <y>456</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>822</x>
+     <y>365</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>exportAnimation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>455</x>
+     <y>464</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>464</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>importButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SimulatorWindow</receiver>
+   <slot>importAnimation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>435</x>
+     <y>423</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>421</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>addFrame()</slot>
+  <slot>insertFrame()</slot>
   <slot>switchFrame(int,int)</slot>
   <slot>storeFrame()</slot>
+  <slot>loadFrameToEditor()</slot>
+  <slot>exportAnimation()</slot>
+  <slot>importAnimation()</slot>
+  <slot>removeFrame()</slot>
  </slots>
 </ui>

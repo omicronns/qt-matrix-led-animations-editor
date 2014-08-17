@@ -61,12 +61,22 @@ SimFrame &SimFrame::clearSimFrame()
 void SimFrame::setPixel(int v_row, int v_col, bool v_val)
 {
     if(v_val)
-        this->setByte(v_row, v_col/8, this->getByte(v_row, v_col/8) | (1 << (v_col % 8)));
+        this->setByte(v_row, v_col/8, this->getByte(v_row, v_col/8) | (0x80 >> (v_col % 8)));
     else
-        this->setByte(v_row, v_col/8, this->getByte(v_row, v_col/8) & ~(1 << (v_col % 8)));
+        this->setByte(v_row, v_col/8, this->getByte(v_row, v_col/8) & ~(0x80 >> (v_col % 8)));
 }
 
 bool SimFrame::getPixel(int v_row, int v_col) const
 {
-    return (this->getByte(v_row, v_col/8) & (1 << (v_col % 8))) == (1 << (v_col % 8));
+    return (this->getByte(v_row, v_col/8) & (0x80 >> (v_col % 8))) == (0x80 >> (v_col % 8));
+}
+
+int SimFrame::rows(void) const
+{
+    return yLen;
+}
+
+int SimFrame::cols(void) const
+{
+    return xLen*8;
 }

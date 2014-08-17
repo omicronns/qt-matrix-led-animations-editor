@@ -9,14 +9,14 @@ LedMatrix::LedMatrix(QWidget *v_parent)
 {
     connect(this, SIGNAL(cellEntered(int,int)), this, SLOT(reactEntered(int,int)));
     connect(this, SIGNAL(cellPressed(int,int)), this, SLOT(reactPressed(int,int)));
-    setFixedHeight(CELL_HEIGHT*FRAME_ROWS + 2);
-    setFixedWidth(CELL_WIDTH*FRAME_COLS + 2);
 }
 
-void LedMatrix::init()
+void LedMatrix::init(int v_cellWidth, int v_cellHeight, int v_width, int v_height)
 {
     createDiodes(8,80);
-    setGridSize(CELL_WIDTH, CELL_HEIGHT);
+    setGridSize(v_cellWidth, v_cellHeight);
+    setFixedHeight(v_height);
+    setFixedWidth(v_width);
 }
 
 void LedMatrix::setGridSize(int v_width, int v_height)

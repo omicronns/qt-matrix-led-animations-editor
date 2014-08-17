@@ -16,6 +16,8 @@ public:
     SimFrame & clearSimFrame(void);
     void setPixel(int v_row, int v_col, bool v_val);
     bool getPixel(int v_row, int v_col) const;
+    int rows(void) const;
+    int cols(void) const;
 };
 
 #endif // SIMFRAME_H

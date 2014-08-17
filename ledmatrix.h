@@ -31,7 +31,10 @@ private:
 
 public:
     LedMatrix(QWidget *v_parent);
-    void init(void);
+    void init(int v_cellWidth,
+              int v_cellHeight,
+              int v_width = CELL_WIDTH*FRAME_COLS + 2,
+              int v_height = CELL_HEIGHT*FRAME_ROWS + 2);
     bool diodeState(int v_row, int v_col);
     bool getDiodeState(int v_row, int v_col);
     void setSimFrame(const SimFrame &v_frame);
